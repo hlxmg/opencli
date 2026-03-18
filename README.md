@@ -143,7 +143,7 @@ npm install -g @jackwener/opencli@latest
 
 ## Built-in Commands
 
-**30 sites · 156 commands** — run `opencli list` for the live registry.
+**32 sites · 162 commands** — run `opencli list` for the live registry.
 
 | Site | Commands | Count | Mode |
 |------|----------|:-----:|------|
@@ -153,7 +153,7 @@ npm install -g @jackwener/opencli@latest
 | **bilibili** | `hot` `search` `me` `favorite` `history` `feed` `subtitle` `dynamic` `ranking` `following` `user-videos` | 11 | 🔐 Browser |
 | **codex** | `status` `send` `read` `new` `extract-diff` `model` `ask` `screenshot` `history` `export` | 10 | 🖥️ Desktop |
 | **chatwise** | `status` `new` `send` `read` `ask` `model` `history` `export` `screenshot` | 9 | 🖥️ Desktop |
-| **notion** | `status` `search` `read` `new` `write` `sidebar` `export` | 7 | 🖥️ Desktop |
+| **notion** | `status` `search` `read` `new` `write` `sidebar` `favorites` `export` | 8 | 🖥️ Desktop |
 | **discord** | `status` `send` `read` `channels` `servers` `search` `members` | 7 | 🖥️ Desktop |
 | **v2ex** | `hot` `latest` `topic` `daily` `me` `notifications` | 6 | 🌐 / 🔐 |
 | **xueqiu** | `feed` `hot-stock` `hot` `search` `stock` `watchlist` | 6 | 🔐 Browser |
@@ -161,6 +161,7 @@ npm install -g @jackwener/opencli@latest
 | **xiaohongshu** | `search` `notifications` `feed` `me` `user` | 5 | 🔐 Browser |
 | **chatgpt** | `status` `new` `send` `read` `ask` | 5 | 🖥️ Desktop |
 | **wechat** | `status` `send` `new` `search` `read` | 5 | 🖥️ Desktop |
+| **feishu** | `status` `send` `new` `search` `read` | 5 | 🖥️ Desktop |
 | **xiaoyuzhou** | `podcast` `podcast-episodes` `episode` | 3 | 🌐 Public |
 | **youtube** | `search` `video` `transcript` | 3 | 🔐 Browser |
 | **zhihu** | `hot` `search` `question` | 3 | 🔐 Browser |
