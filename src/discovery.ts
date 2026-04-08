@@ -17,6 +17,7 @@ import { type CliCommand, type InternalCliCommand, type Arg, Strategy, registerC
 import { getErrorMessage } from './errors.js';
 import { log } from './logger.js';
 import type { ManifestEntry } from './build-manifest.js';
+import { ensureSelfImportShims } from './self-import-shims.js';
 import { findPackageRoot, getCliManifestPath, getFetchAdaptersScriptPath } from './package-paths.js';
 
 /** User runtime directory: ~/.opencli */
@@ -208,6 +209,7 @@ async function loadFromManifest(manifestPath: string, clisDir: string): Promise<
  */
 async function discoverClisFromFs(dir: string): Promise<void> {
   try { await fs.promises.access(dir); } catch { return; }
+  await ensureSelfImportShims();
   const entries = await fs.promises.readdir(dir, { withFileTypes: true });
   
   const sitePromises = entries

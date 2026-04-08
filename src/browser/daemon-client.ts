@@ -31,6 +31,7 @@ export interface DaemonCommand {
   domain?: string;
   matchDomain?: string;
   matchPathPrefix?: string;
+  active?: boolean;
   format?: 'png' | 'jpeg';
   quality?: number;
   fullPage?: boolean;

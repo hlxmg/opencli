@@ -15,6 +15,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import yaml from 'js-yaml';
 import { getErrorMessage } from './errors.js';
 import { fullName, getRegistry, type CliCommand } from './registry.js';
+import { ensureSelfImportShims } from './self-import-shims.js';
 import { findPackageRoot, getCliManifestPath } from './package-paths.js';
 
 const PACKAGE_ROOT = findPackageRoot(fileURLToPath(import.meta.url));
@@ -202,6 +203,7 @@ export function shouldReplaceManifestEntry(current: ManifestEntry, next: Manifes
 }
 
 export async function buildManifest(): Promise<ManifestEntry[]> {
+  await ensureSelfImportShims();
   const manifest = new Map<string, ManifestEntry>();
 
   if (fs.existsSync(CLIS_DIR)) {
