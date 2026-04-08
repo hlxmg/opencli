@@ -20,6 +20,7 @@ import { findPackageRoot, getCliManifestPath } from './package-paths.js';
 
 const PACKAGE_ROOT = findPackageRoot(fileURLToPath(import.meta.url));
 const CLIS_DIR = path.join(PACKAGE_ROOT, 'clis');
+const SRC_CLIS_DIR = path.join(PACKAGE_ROOT, 'src', 'clis');
 const OUTPUT = getCliManifestPath(CLIS_DIR);
 
 export interface ManifestEntry {
@@ -206,9 +207,10 @@ export async function buildManifest(): Promise<ManifestEntry[]> {
   await ensureSelfImportShims();
   const manifest = new Map<string, ManifestEntry>();
 
-  if (fs.existsSync(CLIS_DIR)) {
-    for (const site of fs.readdirSync(CLIS_DIR)) {
-      const siteDir = path.join(CLIS_DIR, site);
+  for (const sourceDir of [CLIS_DIR, SRC_CLIS_DIR]) {
+    if (!fs.existsSync(sourceDir)) continue;
+    for (const site of fs.readdirSync(sourceDir)) {
+      const siteDir = path.join(sourceDir, site);
       if (!fs.statSync(siteDir).isDirectory()) continue;
       for (const file of fs.readdirSync(siteDir)) {
         const filePath = path.join(siteDir, file);

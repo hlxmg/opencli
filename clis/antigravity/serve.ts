@@ -471,6 +471,10 @@ export async function startServe(opts: { port?: number } = {}): Promise<void> {
       );
     }
 
+    if (!page) {
+      throw new Error('CDP connected without an active page target');
+    }
+
     console.error('[serve] ✅ CDP connected.');
 
     // Quick verification
@@ -597,4 +601,3 @@ export async function startServe(opts: { port?: number } = {}): Promise<void> {
   // Keep alive
   await new Promise(() => {});
 }
-

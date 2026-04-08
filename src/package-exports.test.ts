@@ -105,20 +105,30 @@ describe('adapter imports use package exports', () => {
 describe('package.json exports resolve to real files', () => {
   const pkgJson = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf-8'));
   const exports = pkgJson.exports as Record<string, string>;
+  const toSourcePath = (target: string): string => target
+    .replace(/^\.\/dist(?:\/src)?\//, './src/')
+    .replace(/\.js$/, '.ts');
 
   it('has exports defined', () => {
     expect(Object.keys(exports).length).toBeGreaterThan(5);
   });
 
+  it('exposes the public browser API', () => {
+    expect(exports['./browser']).toBe('./dist/src/browser-api.js');
+  });
+
   for (const [exportPath, target] of Object.entries(exports)) {
     it(`export "${exportPath}" → ${target} has a source file`, () => {
       // Export targets point to dist/ (compiled). Verify the source .ts exists.
-      // dist/src/foo.js → src/foo.ts
-      const sourcePath = target
-        .replace(/^\.\/dist\//, './')
-        .replace(/\.js$/, '.ts');
+      // dist/foo.js → src/foo.ts
+      const sourcePath = toSourcePath(target);
       const fullPath = path.join(ROOT, sourcePath);
       expect(fs.existsSync(fullPath), `Missing source: ${sourcePath}`).toBe(true);
     });
   }
+
+  it('main and bin point to built files in the current dist layout', () => {
+    expect(pkgJson.main).toBe('dist/src/main.js');
+    expect(pkgJson.bin?.opencli).toBe('dist/src/main.js');
+  });
 });

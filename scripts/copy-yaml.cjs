@@ -19,6 +19,27 @@ function walk(src, dst) {
 }
 
 walk('clis', 'dist/clis');
+walkBuiltAdapters('dist/src/clis', 'dist/clis');
+
+function walkBuiltAdapters(src, dst) {
+  if (!existsSync(src)) return;
+  for (const f of readdirSync(src)) {
+    const sp = path.join(src, f);
+    const dp = path.join(dst, f);
+    if (statSync(sp).isDirectory()) {
+      walkBuiltAdapters(sp, dp);
+    } else if (
+      (f.endsWith('.js') || f.endsWith('.d.ts'))
+      && !f.endsWith('.test.js')
+      && !f.endsWith('.test.d.ts')
+      && f !== 'index.js'
+      && f !== 'index.d.ts'
+    ) {
+      mkdirSync(path.dirname(dp), { recursive: true });
+      copyFileSync(sp, dp);
+    }
+  }
+}
 
 // Copy external CLI registry to dist/
 const extSrc = 'src/external-clis.yaml';

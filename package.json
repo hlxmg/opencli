@@ -21,6 +21,7 @@
     "./utils": "./dist/src/utils.js",
     "./logger": "./dist/src/logger.js",
     "./launcher": "./dist/src/launcher.js",
+    "./browser": "./dist/src/browser-api.js",
     "./browser/cdp": "./dist/src/browser/cdp.js",
     "./browser/page": "./dist/src/browser/page.js",
     "./browser/utils": "./dist/src/browser/utils.js",

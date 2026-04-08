@@ -40,6 +40,13 @@ function parseStrategy(rawStrategy: string | undefined, fallback: Strategy = Str
 import { isRecord } from './utils.js';
 
 const PACKAGE_ROOT = findPackageRoot(fileURLToPath(import.meta.url));
+const LEGACY_USER_SHIMS = [
+  ['registry.js', 'dist', 'src', 'registry-api.js'],
+  ['errors.js', 'dist', 'src', 'errors.js'],
+  ['browser.js', 'dist', 'src', 'browser-api.js'],
+  ['browser/page.js', 'dist', 'src', 'browser', 'page.js'],
+  ['browser/daemon-client.js', 'dist', 'src', 'browser', 'daemon-client.js'],
+] as const;
 
 /**
  * Ensure ~/.opencli/node_modules/@jackwener/opencli symlink exists so that
@@ -81,6 +88,22 @@ export async function ensureUserCliCompatShims(baseDir: string = USER_OPENCLI_DI
   } catch (err) {
     log.warn(`Could not create symlink at ${symlinkPath}: ${getErrorMessage(err)}`);
   }
+
+  await Promise.all(
+    LEGACY_USER_SHIMS.map(async ([file, ...targetParts]) => {
+      const targetHref = pathToFileURL(path.join(opencliRoot, ...targetParts)).href;
+      const shimPath = path.join(baseDir, file);
+      const shimContent = `export * from '${targetHref}';\n`;
+      try {
+        const existing = await fs.promises.readFile(shimPath, 'utf-8');
+        if (existing === shimContent) return;
+      } catch {
+        // Fall through to create or update the shim.
+      }
+      await fs.promises.mkdir(path.dirname(shimPath), { recursive: true });
+      await fs.promises.writeFile(shimPath, shimContent, 'utf-8');
+    }),
+  );
 }
 
 const ADAPTER_MANIFEST_PATH = path.join(USER_OPENCLI_DIR, 'adapter-manifest.json');

@@ -112,6 +112,28 @@ cli({
       await fs.promises.rm(tempOpencliRoot, { recursive: true, force: true });
     }
   });
+
+  it('refreshes legacy root shims for cached user adapters', async () => {
+    const tempOpencliRoot = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'opencli-user-shims-'));
+
+    try {
+      await ensureUserCliCompatShims(tempOpencliRoot);
+
+      const registryShim = await fs.promises.readFile(path.join(tempOpencliRoot, 'registry.js'), 'utf-8');
+      const errorsShim = await fs.promises.readFile(path.join(tempOpencliRoot, 'errors.js'), 'utf-8');
+      const browserShim = await fs.promises.readFile(path.join(tempOpencliRoot, 'browser.js'), 'utf-8');
+      const browserPageShim = await fs.promises.readFile(path.join(tempOpencliRoot, 'browser', 'page.js'), 'utf-8');
+      const browserDaemonShim = await fs.promises.readFile(path.join(tempOpencliRoot, 'browser', 'daemon-client.js'), 'utf-8');
+
+      expect(registryShim).toContain('/dist/src/registry-api.js');
+      expect(errorsShim).toContain('/dist/src/errors.js');
+      expect(browserShim).toContain('/dist/src/browser-api.js');
+      expect(browserPageShim).toContain('/dist/src/browser/page.js');
+      expect(browserDaemonShim).toContain('/dist/src/browser/daemon-client.js');
+    } finally {
+      await fs.promises.rm(tempOpencliRoot, { recursive: true, force: true });
+    }
+  });
 });
 
 describe('discoverPlugins', () => {
